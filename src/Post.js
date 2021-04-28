@@ -1,19 +1,21 @@
 import React from "react";
-
+import styles from './Post.module.css';
 
 const Post = props => {
 
-
-
-     
-
   return (
-    <div>
+    <div  style={props.style} className={styles.['row']}>
 
-    <div>{props.title}</div>
-    <div>{props.body}</div>
-    <p></p>
-    <p></p>  
+      <div className={styles.['content']}>
+
+        <div>{props.id}</div>
+
+        <div>{props.title}</div>
+
+        <div>{props.body}</div>
+
+      </div>
+
     </div>
   );
 }
