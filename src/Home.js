@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Post from './Post';
 import { List, AutoSizer, CellMeasurer, CellMeasurerCache } from "react-virtualized";
 import styles from './Home.module.css';
@@ -7,13 +7,15 @@ import styles from './Home.module.css';
 const rowHeight = 122;
 let cache = new CellMeasurerCache({
   fixedWidth: true,
-  defaultHeight: 122
+  defaultHeight: 150
 });
 
 const Home = props => {
 
-
+const [selectedIndex, setSelectedIndex] = useState(-1);
+const [postsExpandStatus, setPostsExpandStatus] = useState({});
 const [posts, setPosts] = useState([]);
+const tableRef = useRef();
 
 useEffect(() => {
   fetch('https://jsonplaceholder.typicode.com/posts').then(
@@ -26,13 +28,20 @@ useEffect(() => {
         title: responseData[key].title,
         body: responseData[key].body
       });
-    } 
-
-    postList[3].body = 'sdgdfgfd fgfdgfdg dfgfdgfdg dgfdgfdgfd gfd repellat aut aperiam totam temporibus autem et architecto magnam ut consequatur qui cupiditate rerum quia soluta dignissimos nihil iure tempore quas est repellat aut aperiam totam temporibus autem et architecto magnam ut consequatur qui cupiditate rerum quia soluta dignissimos nihil iure tempore quas est repellat aut aperiam totam temporibus autem et architecto magnam ut consequatur qui cupiditate rerum quia soluta dignissimos nihil iure tempore quas est repellat aut aperiam totam temporibus autem et architecto magnam ut consequatur qui cupiditate rerum quia soluta dignissimos nihil iure tempore quas est';
+    }     
     setPosts(postList);
   });
 }, []);
 
+useEffect(()=> {
+  if (selectedIndex > 0) {
+    // cache.clear(selectedIndex);
+    cache.clearAll();
+    tableRef.current.recomputeRowHeights(selectedIndex);
+    //tableRef.current.forceUpdate();
+    tableRef.current.forceUpdateGrid();    
+  }
+}, [postsExpandStatus]);
 
 const renderRow = ({ index, key, style, parent }) => {
   return (
@@ -42,7 +51,9 @@ const renderRow = ({ index, key, style, parent }) => {
     parent={parent}
     columnIndex={0}
     rowIndex={index}>    
-    <Post key={key} style={style} id={posts[index].id} title={posts[index].title} body={posts[index].body}></Post>
+    <Post key={key} style={style} id={posts[index].id} title={posts[index].title} body={posts[index].body} onSelectHandler={{postsExpandStatus, setPostsExpandStatus}} onSelectIndex={{selectedIndex, setSelectedIndex}}></Post>
+
+    
     </CellMeasurer>
   );
 }
@@ -54,6 +65,7 @@ return (
 {
   ({ width, height }) => {
     return <List
+      ref={tableRef}
       width={width}
       height={height}
       deferredMeasurementCache={cache}
