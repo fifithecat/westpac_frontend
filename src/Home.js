@@ -36,10 +36,12 @@ useEffect(() => {
 useEffect(()=> {
   if (selectedIndex > 0) {
     // cache.clear(selectedIndex);
+    console.log('update layout');
     cache.clearAll();
     tableRef.current.recomputeRowHeights(selectedIndex);
     //tableRef.current.forceUpdate();
-    tableRef.current.forceUpdateGrid();    
+    tableRef.current.forceUpdateGrid(); 
+      
   }
 }, [postsExpandStatus]);
 
@@ -51,7 +53,13 @@ const renderRow = ({ index, key, style, parent }) => {
     parent={parent}
     columnIndex={0}
     rowIndex={index}>    
-    <Post key={key} style={style} id={posts[index].id} title={posts[index].title} body={posts[index].body} onSelectHandler={{postsExpandStatus, setPostsExpandStatus}} onSelectIndex={{selectedIndex, setSelectedIndex}}></Post>
+    <Post key={key} 
+          style={style} 
+          id={posts[index].id} 
+          title={posts[index].title} 
+          body={posts[index].body} 
+          onSelectHandler={{postsExpandStatus, setPostsExpandStatus}} 
+          onSelectIndex={{selectedIndex, setSelectedIndex}}></Post>
 
     
     </CellMeasurer>
