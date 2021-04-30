@@ -3,7 +3,6 @@ import Post from './Post';
 import { List, AutoSizer, CellMeasurer, CellMeasurerCache } from "react-virtualized";
 import styles from './Home.module.css';
 
-
 const rowHeight = 122;
 let cache = new CellMeasurerCache({
   fixedWidth: true,
@@ -16,6 +15,7 @@ const [selectedIndex, setSelectedIndex] = useState(-1);
 const [postsExpandStatus, setPostsExpandStatus] = useState({});
 const [posts, setPosts] = useState([]);
 const tableRef = useRef();
+const [comments, setComments] = useState([]);
 
 useEffect(() => {
   fetch('https://jsonplaceholder.typicode.com/posts').then(
@@ -58,6 +58,7 @@ const renderRow = ({ index, key, style, parent }) => {
           id={posts[index].id} 
           title={posts[index].title} 
           body={posts[index].body} 
+          postComments={{comments, setComments}}
           onSelectHandler={{postsExpandStatus, setPostsExpandStatus}} 
           onSelectIndex={{selectedIndex, setSelectedIndex}}></Post>
 
