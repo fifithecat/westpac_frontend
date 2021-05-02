@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
-import Post from './Post';
+import Post from './components/Post';
 import { List, AutoSizer, CellMeasurer, CellMeasurerCache } from "react-virtualized";
-import styles from './Home.module.css';
+import styles from './styles/Home.module.css';
 
-const rowHeight = 122;
 let cache = new CellMeasurerCache({
   fixedWidth: true,
   defaultHeight: 150
@@ -18,15 +17,17 @@ const tableRef = useRef();
 const [comments, setComments] = useState([]);
 
 useEffect(() => {
-  fetch('https://jsonplaceholder.typicode.com/posts').then(
+  fetch('http://localhost:8080/api/posts').then(
       response => response.json()
   ).then(responseData => {
     const postList = [];
     for (const key in responseData) {
         postList.push({
         id: responseData[key].id,
+        userId: responseData[key].userId,
         title: responseData[key].title,
-        body: responseData[key].body
+        body: responseData[key].body,
+        commentCount: responseData[key].commentCount
       });
     }     
     setPosts(postList);
@@ -34,14 +35,15 @@ useEffect(() => {
 }, []);
 
 useEffect(()=> {
+  console.log('index ' + selectedIndex);
+  console.log('prepare update layout');
   if (selectedIndex > 0) {
-    // cache.clear(selectedIndex);
+    //cache.clear(selectedIndex);
     console.log('update layout');
     cache.clearAll();
     tableRef.current.recomputeRowHeights(selectedIndex);
-    //tableRef.current.forceUpdate();
+    tableRef.current.forceUpdate();
     tableRef.current.forceUpdateGrid(); 
-      
   }
 }, [postsExpandStatus]);
 
@@ -56,8 +58,10 @@ const renderRow = ({ index, key, style, parent }) => {
     <Post key={key} 
           style={style} 
           id={posts[index].id} 
+          userId={posts[index].userId}
           title={posts[index].title} 
           body={posts[index].body} 
+          commentCount={posts[index].commentCount}
           postComments={{comments, setComments}}
           onSelectHandler={{postsExpandStatus, setPostsExpandStatus}} 
           onSelectIndex={{selectedIndex, setSelectedIndex}}></Post>
@@ -69,7 +73,7 @@ const renderRow = ({ index, key, style, parent }) => {
  
 return (
 
-<div className={styles.['list']}>
+<div className={styles.['list_container']}>
 <AutoSizer>
 {
   ({ width, height }) => {
@@ -81,7 +85,7 @@ return (
       rowHeight={cache.rowHeight}
       rowRenderer={renderRow}
       rowCount={posts.length}
-      overscanRowCount={3} />
+      overscanRowCount={0} />
   }
 }
 </AutoSizer>

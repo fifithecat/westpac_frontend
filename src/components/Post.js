@@ -1,5 +1,6 @@
-import React, {  useState, useEffect }  from "react";
-import styles from './Post.module.css';
+import React  from "react";
+import styles from '../styles/Post.module.css';
+import Comment from './Comment';
 
 const Post = props => {
   const {postsExpandStatus, setPostsExpandStatus} = props.onSelectHandler;
@@ -8,19 +9,18 @@ const Post = props => {
 
   const expand = () => {
 
-
     let current = postsExpandStatus.[`_${props.id}`];
-
 
     if (current === undefined) {
 
       const postList = [];
-      fetch(`https://jsonplaceholder.typicode.com/comments?postId=${props.id}`).then(
+      fetch(`http://localhost:8080/api/comments?postId=${props.id}`).then(
           response => response.json()
       ).then(responseData => {
         
         for (const key in responseData) {
             postList.push({
+            id: responseData[key].id,
             postId: responseData[key].postId,   
             name: responseData[key].name,
             email: responseData[key].email,
@@ -28,20 +28,14 @@ const Post = props => {
           });
         }     
 
-        setComments({...comments, [`_${props.id}`]: postList[0]});
+        setComments({...comments, [`_${props.id}`]: postList});
         
 
-      }).then(()=> {
-        
-        console.log(postList[0]);
-
+      }).then(()=> {        
         setSelectedIndex(props.id);
       }).then(()=> {
-        setPostsExpandStatus({...postsExpandStatus, [`_${props.id}`]: true});
-      
-      });
-
-      
+        setPostsExpandStatus({...postsExpandStatus, [`_${props.id}`]: true});      
+      });      
     } else{
       delete postsExpandStatus.[`_${props.id}`];
       setPostsExpandStatus({...postsExpandStatus});
@@ -58,20 +52,25 @@ const Post = props => {
 
         <div>
 
-        <div>{props.id}</div>
+        <div>Post Id: {props.id}</div>
 
-        <div>{props.title}</div>
+        <div>User Id: {props.userId}</div>
 
-        <div> {props.body}</div>
+        <div>Post Title: {props.title}</div>
+
+        <div>Post Body: {props.body}</div>
         
         </div>
-
        
-
       </div>
-      <div><a href="#"       
-              onClick={expand}>{postsExpandStatus.[`_${props.id}`] ? 'collpase' : 'expand'}</a></div>
-        {postsExpandStatus.[`_${props.id}`] && <div> {comments.[`_${props.id}`].postId} {comments.[`_${props.id}`].email} {comments.[`_${props.id}`].body}</div>}
+      <div>
+        {props.commentCount > 0 && <a href="#" onClick={expand}>{postsExpandStatus.[`_${props.id}`] ? 'collpase' : `Show ${props.commentCount} comments`}</a>}
+      </div>
+        {postsExpandStatus.[`_${props.id}`] && 
+          comments.[`_${props.id}`].map(
+          (comment) => <Comment id={comment.id} postId={comment.postId} name={comment.name} email={comment.email} body={comment.body}></Comment>) 
+        }
+
 
         
 
