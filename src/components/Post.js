@@ -1,11 +1,33 @@
-import React  from "react";
+import React, {useEffect, useState}  from "react";
 import styles from '../styles/Post.module.css';
 import Comment from './Comment';
+import CommentInput from './CommentInput';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const Post = props => {
   const {postsExpandStatus, setPostsExpandStatus} = props.onSelectHandler;
   const {selectedIndex, setSelectedIndex} = props.onSelectIndex;
   const {comments, setComments} = props.postComments;
+  const {commentAble, setCommentAble} = props.onShowCommentBox;
+
+  const {
+    isLoading,
+    isAuthenticated
+  } = useAuth0();
+
+  //   useEffect(
+    
+  //   ()=> {
+      
+  //     console.log('Post useeffect');
+  //     if (!isLoading && isAuthenticated) {
+  //       console.log('Post useeffect2');
+  //     Promise.resolve()
+  //     .then(()=>{setCommentAble(true)})
+  //     //.then(()=>props.onRefreshLayout())
+  //     }
+  //   }
+  // , [isAuthenticated]); 
 
   const expand = () => {
 
@@ -61,11 +83,16 @@ const Post = props => {
         <div>Post Body: {props.body}</div>
         
         </div>
-       
+        
       </div>
       <div>
-        {props.commentCount > 0 && <a href="#" onClick={expand}>{postsExpandStatus.[`_${props.id}`] ? 'collpase' : `Show ${props.commentCount} comments`}</a>}
+        {isAuthenticated && commentAble? <div><CommentInput/></div> : <div>Please login to leave comment</div>}
       </div>
+      <div>
+        { props.commentCount > 0 && <a href="#" onClick={expand}>{postsExpandStatus.[`_${props.id}`] ? 'collpase' : `Show ${props.commentCount} comments`}</a>} 
+        {/*<a href="#" onClick={expand}>{postsExpandStatus.[`_${props.id}`] ? 'collpase' : `Show comments`}</a>*/}
+      </div>
+      
         {postsExpandStatus.[`_${props.id}`] && 
           comments.[`_${props.id}`].map(
           (comment) => <Comment id={comment.id} postId={comment.postId} name={comment.name} email={comment.email} body={comment.body}></Comment>) 
