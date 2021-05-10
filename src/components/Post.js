@@ -1,4 +1,4 @@
-import React, {useEffect, useState}  from "react";
+import React  from "react";
 import styles from '../styles/Post.module.css';
 import Comment from './Comment';
 import CommentInput from './CommentInput';
@@ -11,23 +11,8 @@ const Post = props => {
   const {commentAble, setCommentAble} = props.onShowCommentBox;
 
   const {
-    isLoading,
     isAuthenticated
   } = useAuth0();
-
-  //   useEffect(
-    
-  //   ()=> {
-      
-  //     console.log('Post useeffect');
-  //     if (!isLoading && isAuthenticated) {
-  //       console.log('Post useeffect2');
-  //     Promise.resolve()
-  //     .then(()=>{setCommentAble(true)})
-  //     //.then(()=>props.onRefreshLayout())
-  //     }
-  //   }
-  // , [isAuthenticated]); 
 
   const expand = () => {
 
@@ -68,9 +53,9 @@ const Post = props => {
 
   }
   return (
-    <div  style={props.style} className={styles.['row']}>
+    <div  style={props.style} className={styles['row']}>
 
-      <div className={styles.['content']}>
+      <div className={styles['content']}>
 
         <div>
 
@@ -86,7 +71,7 @@ const Post = props => {
         
       </div>
       <div>
-        {isAuthenticated && commentAble? <div><CommentInput/></div> : <div>Please login to leave comment</div>}
+        {isAuthenticated && commentAble? <div><CommentInput postId={props.id}/></div> : <div>Please login to leave comment</div>}
       </div>
       <div>
         { props.commentCount > 0 && <a href="#" onClick={expand}>{postsExpandStatus.[`_${props.id}`] ? 'collpase' : `Show ${props.commentCount} comments`}</a>} 

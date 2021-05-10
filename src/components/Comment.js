@@ -4,7 +4,7 @@ import styles from '../styles/Comment.module.css';
 const Comment = props => {
 
   return (
-    <div className={styles.['main-container']}>
+    <div className={styles['main-container']}>
 
         <div>Comment ID: {props.id}</div>
 

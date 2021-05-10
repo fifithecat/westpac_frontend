@@ -45,7 +45,6 @@ useEffect(()=> {
   console.log('index ' + selectedIndex);
   console.log('prepare update layout');
   if (selectedIndex > 0) {
-    //cache.clear(selectedIndex);
     console.log('update layout');
     cache.clearAll();
     tableRef.current.recomputeRowHeights(selectedIndex);
@@ -104,7 +103,7 @@ const renderRow = ({ index, key, style, parent }) => {
  
 return (
 
-<div className={styles.['list_container']}>
+<div className={styles['list_container']}>
 <AutoSizer>
 {
   ({ width, height }) => {
