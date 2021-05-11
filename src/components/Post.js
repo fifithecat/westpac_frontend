@@ -6,27 +6,40 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 const Post = props => {
   const {postsExpandStatus, setPostsExpandStatus} = props.onSelectHandler;
-  const {selectedIndex, setSelectedIndex} = props.onSelectIndex;
+  const setSelectedIndex = props.onSelectIndex;
   const {comments, setComments} = props.postComments;
-  const {commentAble, setCommentAble} = props.onShowCommentBox;
+  const commentAble = props.onShowCommentBox;
 
-  const [id, setId] = useState(props.id);
-  const [userId, setUserId] = useState(props.userId);
-  const [title, setTitle] = useState(props.title);
-  const [body, setBody] = useState(props.body);
+
   const [commentCount, setCommentCount] = useState(props.commentCount);
 
   const {
     isAuthenticated
   } = useAuth0();
 
-  const refreshPost = () => {
+  const refreshPost = (newComment) => {
+
+    let currentStatus = postsExpandStatus.[`_${props.id}`];
+
     fetch(`http://localhost:8080/api/post?id=${props.id}`).then(
         response => response.json()
     ).then(responseData => {
 
         setCommentCount(responseData.commentCount);
       }         
+    )    
+    .then(()=> {
+        if (currentStatus === true) {
+          const currentPostComment = [{...newComment}, ...comments.[`_${props.id}`] ];      
+          setComments({...comments, [`_${props.id}`]: currentPostComment});
+        }
+      }
+    )
+    .then(() => {
+      if (currentStatus === true) {
+        props.onRefreshLayout()
+      }
+    }  
     );
   };
 

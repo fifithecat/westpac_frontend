@@ -14,14 +14,16 @@ const CommentInput = props => {
     const token = await getAccessTokenSilently();
     let comment = {'postId': props.postId, 'name': user.name, 'email': user.email, 'body': 'abc'};
 
-    await fetch('http://localhost:8080/api/comment', {
+    let response = await fetch('http://localhost:8080/api/comment', {
       method: 'POST',
       body:JSON.stringify(comment),
       headers:{'Content-Type': 'application/json',  'Authorization': `Bearer ${token}`,}
 
     });
 
-    await props.refreshPostHandler();
+    let res = await response.json();
+    let newComment = {'id':res.id, ...comment};
+    await props.refreshPostHandler(newComment);
   };
 
   return (

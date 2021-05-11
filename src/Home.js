@@ -44,10 +44,6 @@ useEffect(() => {
 useEffect(()=> {
   if (selectedIndex > 0) {
     console.log('update layout');
-    // cache.clearAll();
-    // tableRef.current.recomputeRowHeights(selectedIndex);
-    // tableRef.current.forceUpdate();
-    // tableRef.current.forceUpdateGrid(); 
     refresh();
   }
 }, [postsExpandStatus]);
@@ -87,8 +83,8 @@ const renderRow = ({ index, key, style, parent }) => {
           commentCount={posts[index].commentCount}
           postComments={{comments, setComments}}
           onSelectHandler={{postsExpandStatus, setPostsExpandStatus}} 
-          onSelectIndex={{selectedIndex, setSelectedIndex}}
-          onShowCommentBox={{commentAble, setCommentAble}}
+          onSelectIndex={setSelectedIndex}
+          onShowCommentBox={commentAble}
           onRefreshLayout={refresh}></Post>
  
     
