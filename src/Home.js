@@ -41,6 +41,14 @@ useEffect(() => {
   });
 }, []);
 
+const refresh = useCallback(() => {
+  console.log('refresh layout');
+  cache.clearAll();
+  tableRef.current.recomputeRowHeights(selectedIndex);
+  tableRef.current.forceUpdate();
+  tableRef.current.forceUpdateGrid(); 
+}, [selectedIndex])
+
 useEffect(()=> {
   if (selectedIndex > 0) {
     console.log('update layout');
@@ -56,15 +64,7 @@ useEffect(
     .then(()=>refresh())
     }
   }
-, [isAuthenticated]); 
-
-const refresh = useCallback(() => {
-  console.log('refresh layout');
-  cache.clearAll();
-  tableRef.current.recomputeRowHeights(selectedIndex);
-  tableRef.current.forceUpdate();
-  tableRef.current.forceUpdateGrid(); 
-}, [selectedIndex])
+, [isAuthenticated, isLoading, refresh]); 
 
 useEffect(() => {
   let timeout;
