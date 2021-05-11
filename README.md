@@ -1,3 +1,10 @@
+Dockerfile added
+
+build docker image - "docker build -t westpac_frontend ."
+
+run docker container - "docker run --rm -p 3000:3000 -it westpac_frontend"
+
+
 Goals:
 
 This application is solely for the job interview purpose of Johnny Lai
