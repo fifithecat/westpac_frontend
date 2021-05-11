@@ -42,30 +42,25 @@ useEffect(() => {
 }, []);
 
 useEffect(()=> {
-  console.log('index ' + selectedIndex);
-  console.log('prepare update layout');
   if (selectedIndex > 0) {
     console.log('update layout');
-    cache.clearAll();
-    tableRef.current.recomputeRowHeights(selectedIndex);
-    tableRef.current.forceUpdate();
-    tableRef.current.forceUpdateGrid(); 
+    // cache.clearAll();
+    // tableRef.current.recomputeRowHeights(selectedIndex);
+    // tableRef.current.forceUpdate();
+    // tableRef.current.forceUpdateGrid(); 
+    refresh();
   }
-}, [postsExpandStatus, isAuthenticated]);
+}, [postsExpandStatus]);
 
-   useEffect(
-    
-    ()=> {
-      
-      console.log('Post useeffect');
-      if (!isLoading && isAuthenticated) {
-        console.log('Post useeffect2');
-      Promise.resolve()
-      .then(()=>{setCommentAble(true)})
-      .then(()=>refresh())
-      }
+useEffect(   
+  ()=> {
+    if (!isLoading && isAuthenticated) {
+    Promise.resolve()
+    .then(()=>{setCommentAble(true)})
+    .then(()=>refresh())
     }
-  , [isAuthenticated]); 
+  }
+, [isAuthenticated]); 
 
 const refresh = () => {
   console.log('refresh layout');

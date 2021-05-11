@@ -1,4 +1,4 @@
-import React  from "react";
+import React, {useState}  from "react";
 import styles from '../styles/Post.module.css';
 import Comment from './Comment';
 import CommentInput from './CommentInput';
@@ -10,9 +10,25 @@ const Post = props => {
   const {comments, setComments} = props.postComments;
   const {commentAble, setCommentAble} = props.onShowCommentBox;
 
+  const [id, setId] = useState(props.id);
+  const [userId, setUserId] = useState(props.userId);
+  const [title, setTitle] = useState(props.title);
+  const [body, setBody] = useState(props.body);
+  const [commentCount, setCommentCount] = useState(props.commentCount);
+
   const {
     isAuthenticated
   } = useAuth0();
+
+  const refreshPost = () => {
+    fetch(`http://localhost:8080/api/post?id=${props.id}`).then(
+        response => response.json()
+    ).then(responseData => {
+
+        setCommentCount(responseData.commentCount);
+      }         
+    );
+  };
 
   const expand = () => {
 
@@ -71,10 +87,10 @@ const Post = props => {
         
       </div>
       <div>
-        {isAuthenticated && commentAble? <div><CommentInput postId={props.id}/></div> : <div>Please login to leave comment</div>}
+        {isAuthenticated && commentAble? <div><CommentInput postId={props.id} refreshPostHandler={refreshPost}/></div> : <div>Please login to leave comment</div>}
       </div>
       <div>
-        { props.commentCount > 0 && <a href="#" onClick={expand}>{postsExpandStatus.[`_${props.id}`] ? 'collpase' : `Show ${props.commentCount} comments`}</a>} 
+        { commentCount > 0 && <a href="#" onClick={expand}>{postsExpandStatus.[`_${props.id}`] ? 'collpase' : `Show ${commentCount} comments`}</a>} 
         {/*<a href="#" onClick={expand}>{postsExpandStatus.[`_${props.id}`] ? 'collpase' : `Show comments`}</a>*/}
       </div>
       

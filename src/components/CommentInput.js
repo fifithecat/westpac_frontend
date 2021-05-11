@@ -20,6 +20,8 @@ const CommentInput = props => {
       headers:{'Content-Type': 'application/json',  'Authorization': `Bearer ${token}`,}
 
     });
+
+    await props.refreshPostHandler();
   };
 
   return (
@@ -27,7 +29,7 @@ const CommentInput = props => {
       <div>Name: {user.name}</div>
       <div>Email: {user.email}</div>
       <div>Comment: <textarea></textarea></div>
-      <div><button onClick={addComment}></button></div>
+      <div><button onClick={addComment}>Leave comment</button></div>
     </div>
   );
 
