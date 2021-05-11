@@ -19,7 +19,7 @@ const Greetings = props => {
     return <div className={styles['headerRightDiv']}><button onClick={loginWithRedirect}>Login</button></div>;
   }  else return (    
   <div className={styles['headerRightDiv']}>Hello {user.name}&nbsp;
-  <a href="#" onClick={() => logout({ returnTo: window.location.origin })}>Log out</a>
+  <a href="/#" onClick={() => logout({ returnTo: window.location.origin })}>Log out</a>
   </div>    
   
 

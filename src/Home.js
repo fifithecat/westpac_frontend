@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import Post from './components/Post';
 import { List, AutoSizer, CellMeasurer, CellMeasurerCache } from "react-virtualized";
 import styles from './styles/Home.module.css';
@@ -58,13 +58,27 @@ useEffect(
   }
 , [isAuthenticated]); 
 
-const refresh = () => {
+const refresh = useCallback(() => {
   console.log('refresh layout');
   cache.clearAll();
   tableRef.current.recomputeRowHeights(selectedIndex);
   tableRef.current.forceUpdate();
   tableRef.current.forceUpdateGrid(); 
-};
+}, [selectedIndex])
+
+useEffect(() => {
+  let timeout;
+  const handleResize = () => {
+    console.log('resize');
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      refresh();
+    }, 200);
+  }
+  window.addEventListener("resize", handleResize);
+
+  return () => window.removeEventListener("resize", handleResize);
+}, [refresh]);
 
 const renderRow = ({ index, key, style, parent }) => {
   return (

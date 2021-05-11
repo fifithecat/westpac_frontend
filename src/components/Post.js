@@ -70,12 +70,13 @@ const Post = props => {
       }).then(()=> {        
         setSelectedIndex(props.id);
       }).then(()=> {
-        setPostsExpandStatus({...postsExpandStatus, [`_${props.id}`]: true});      
+        setPostsExpandStatus({...postsExpandStatus, [`_${props.id}`]: true});
+        //props.onRefreshLayout();     
       });      
     } else{
       delete postsExpandStatus.[`_${props.id}`];
       setPostsExpandStatus({...postsExpandStatus});
-      
+      //props.onRefreshLayout();
 
       setSelectedIndex(props.id);
     }
@@ -103,8 +104,7 @@ const Post = props => {
         {isAuthenticated && commentAble? <div><CommentInput postId={props.id} refreshPostHandler={refreshPost}/></div> : <div>Please login to leave comment</div>}
       </div>
       <div>
-        { commentCount > 0 && <a href="#" onClick={expand}>{postsExpandStatus.[`_${props.id}`] ? 'collpase' : `Show ${commentCount} comments`}</a>} 
-        {/*<a href="#" onClick={expand}>{postsExpandStatus.[`_${props.id}`] ? 'collpase' : `Show comments`}</a>*/}
+        { commentCount > 0 && <a href="/#" onClick={expand}>{postsExpandStatus.[`_${props.id}`] ? 'collpase' : `Show ${commentCount} comments`}</a>} 
       </div>
       
         {postsExpandStatus.[`_${props.id}`] && 
