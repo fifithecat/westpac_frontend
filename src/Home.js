@@ -37,6 +37,8 @@ useEffect(() => {
       });
     }     
     setPosts(postList);
+  }).catch(error => {
+    console.error('Error:', error);
   });
 }, []);
 
@@ -77,8 +79,12 @@ const renderRow = ({ index, key, style, parent }) => {
     cache={cache}
     parent={parent}
     columnIndex={0}
-    rowIndex={index}>    
+    rowIndex={index}>  
+ 
+      {({ measure, registerChild }) => 
+        
     <Post key={key} 
+          refParam={registerChild}
           style={style} 
           id={posts[index].id} 
           userId={posts[index].userId}
@@ -88,11 +94,14 @@ const renderRow = ({ index, key, style, parent }) => {
           postComments={{comments, setComments}}
           onSelectHandler={{postsExpandStatus, setPostsExpandStatus}} 
           onShowCommentBox={commentAble}
-          onRefreshLayout={refresh}></Post>     
+          onRefreshLayout={refresh}></Post> 
+         
+                 
+      }
     </CellMeasurer>
   );
 }
- 
+// registerChild - https://nicedoc.io/bvaughn/react-virtualized/blob/master/docs/CellMeasurer.md#user-content-using-registerchild 
 return (
 
 <div className={styles['list_container']}>

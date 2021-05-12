@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef} from "react";
 import { useAuth0 } from '@auth0/auth0-react';
 import styles from '../styles/CommentInput.module.css';
 
@@ -8,11 +8,14 @@ const CommentInput = props => {
     user,
     getAccessTokenSilently 
   } = useAuth0();
+  
+  const textInput = useRef(null);
 
   const addComment = async () => {
-    console.log('add comment');
+    const bodyText = textInput.current.value;
+        
     const token = await getAccessTokenSilently();
-    let comment = {'postId': props.postId, 'name': user.name, 'email': user.email, 'body': 'abc'};
+    let comment = {'postId': props.postId, 'name': user.name, 'email': user.email, 'body': bodyText};
 
     let response = await fetch('http://localhost:8080/api/comment', {
       method: 'POST',
@@ -20,7 +23,7 @@ const CommentInput = props => {
       headers:{'Content-Type': 'application/json',  'Authorization': `Bearer ${token}`,}
 
     });
-
+    textInput.current.value = '';
     let res = await response.json();
     let newComment = {'id':res.id, ...comment};
     await props.refreshPostHandler(newComment);
@@ -30,7 +33,7 @@ const CommentInput = props => {
     <div className={styles['main-container']}>
       <div>Name: {user.name}</div>
       <div>Email: {user.email}</div>
-      <div>Comment: <textarea></textarea></div>
+      <div>Comment: <textarea ref={textInput}></textarea></div>
       <div><button onClick={addComment}>Leave comment</button></div>
     </div>
   );

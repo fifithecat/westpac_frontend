@@ -77,7 +77,7 @@ const Post = props => {
 
   }
   return (
-    <div  style={props.style} className={styles['row']}>
+    <div  style={props.style} className={styles['row']} ref={props.refParam}>
 
       <div className={styles['content']}>
 
@@ -103,7 +103,7 @@ const Post = props => {
       
         {postsExpandStatus.[`_${props.id}`] && 
           comments.[`_${props.id}`].map(
-          (comment) => <Comment id={comment.id} postId={comment.postId} name={comment.name} email={comment.email} body={comment.body}></Comment>) 
+          (comment) => <Comment key={comment.postId + ' ' + comment.id} id={comment.id} postId={comment.postId} name={comment.name} email={comment.email} body={comment.body}></Comment>) 
         }        
     </div>
   );
