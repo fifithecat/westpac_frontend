@@ -6,11 +6,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 const Post = props => {
   const {postsExpandStatus, setPostsExpandStatus} = props.onSelectHandler;
-  const setSelectedIndex = props.onSelectIndex;
   const {comments, setComments} = props.postComments;
   const commentAble = props.onShowCommentBox;
-
-
   const [commentCount, setCommentCount] = useState(props.commentCount);
 
   const {
@@ -48,7 +45,7 @@ const Post = props => {
     let current = postsExpandStatus.[`_${props.id}`];
 
     if (current === undefined) {
-
+      console.log('in current undefined');
       const postList = [];
       fetch(`http://localhost:8080/api/comments?postId=${props.id}`).then(
           response => response.json()
@@ -66,19 +63,16 @@ const Post = props => {
 
         setComments({...comments, [`_${props.id}`]: postList});
         
-
-      }).then(()=> {        
-        setSelectedIndex(props.id);
-      }).then(()=> {
-        setPostsExpandStatus({...postsExpandStatus, [`_${props.id}`]: true});
-        //props.onRefreshLayout();     
+      }).then(()=> {       
+        console.log('props.id ' + props.id); 
+        setPostsExpandStatus({...postsExpandStatus, [`_${props.id}`]: true}); 
+        props.onRefreshLayout(); 
       });      
     } else{
+      console.log('in current else');
       delete postsExpandStatus.[`_${props.id}`];
       setPostsExpandStatus({...postsExpandStatus});
-      //props.onRefreshLayout();
-
-      setSelectedIndex(props.id);
+      props.onRefreshLayout();
     }
 
   }
@@ -110,11 +104,7 @@ const Post = props => {
         {postsExpandStatus.[`_${props.id}`] && 
           comments.[`_${props.id}`].map(
           (comment) => <Comment id={comment.id} postId={comment.postId} name={comment.name} email={comment.email} body={comment.body}></Comment>) 
-        }
-
-
-        
-
+        }        
     </div>
   );
 }

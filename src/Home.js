@@ -12,7 +12,6 @@ let cache = new CellMeasurerCache({
 
 const Home = props => {
 
-const [selectedIndex, setSelectedIndex] = useState(-1);
 const [postsExpandStatus, setPostsExpandStatus] = useState({});
 const [posts, setPosts] = useState([]);
 const tableRef = useRef();
@@ -42,19 +41,11 @@ useEffect(() => {
 }, []);
 
 const refresh = useCallback(() => {
-  console.log('refresh layout');
+  console.log('refresh layout becoz index ');
   cache.clearAll();
-  tableRef.current.recomputeRowHeights(selectedIndex);
   tableRef.current.forceUpdate();
   tableRef.current.forceUpdateGrid(); 
-}, [selectedIndex])
-
-useEffect(()=> {
-  if (selectedIndex > 0) {
-    console.log('update layout');
-    refresh();
-  }
-}, [postsExpandStatus]);
+}, [])
 
 useEffect(   
   ()=> {
@@ -69,7 +60,6 @@ useEffect(
 useEffect(() => {
   let timeout;
   const handleResize = () => {
-    console.log('resize');
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       refresh();
@@ -97,11 +87,8 @@ const renderRow = ({ index, key, style, parent }) => {
           commentCount={posts[index].commentCount}
           postComments={{comments, setComments}}
           onSelectHandler={{postsExpandStatus, setPostsExpandStatus}} 
-          onSelectIndex={setSelectedIndex}
           onShowCommentBox={commentAble}
-          onRefreshLayout={refresh}></Post>
- 
-    
+          onRefreshLayout={refresh}></Post>     
     </CellMeasurer>
   );
 }
