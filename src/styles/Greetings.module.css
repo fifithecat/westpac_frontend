@@ -1,4 +1,7 @@
 .headerRightDiv{
   width:50%;
   text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

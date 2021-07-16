@@ -1,4 +1,4 @@
-import React, {useState}  from "react";
+import React, {useEffect, useState}  from "react";
 import styles from '../styles/Post.module.css';
 import Comment from './Comment';
 import CommentInput from './CommentInput';
@@ -10,9 +10,16 @@ const Post = props => {
   const commentAble = props.onShowCommentBox;
   const [commentCount, setCommentCount] = useState(props.commentCount);
 
+
   const {
     isAuthenticated
   } = useAuth0();
+
+  useEffect(() => {
+    if (commentCount === undefined) {
+      setCommentCount(()=>props.commentCount);
+    }
+  }, [props.commentCount]);
 
   const refreshPost = (newComment) => {
 
@@ -23,6 +30,7 @@ const Post = props => {
     ).then(responseData => {
 
         setCommentCount(responseData.commentCount);
+        //setCommentsCount({...commentsCount, [`_${props.id}`]: responseData.commentCount});
       }         
     )    
     .then(()=> {
@@ -91,6 +99,8 @@ const Post = props => {
 
         <div>Post Body: {props.body}</div>
         
+
+
         </div>
         
       </div>
@@ -98,7 +108,8 @@ const Post = props => {
         {isAuthenticated && commentAble? <div><CommentInput postId={props.id} refreshPostHandler={refreshPost}/></div> : <div>Please login to leave comment</div>}
       </div>
       <div>
-        { commentCount > 0 && <a href="/#" onClick={expand}>{postsExpandStatus.[`_${props.id}`] ? 'collpase' : `Show ${commentCount} comments`}</a>} 
+        {  commentCount === undefined ? 'Show comments: loading' : (commentCount > 0 && <a href="/#" onClick={expand}>{postsExpandStatus.[`_${props.id}`] ? 'collpase' : `Show ${commentCount} comments`}</a>) }
+        {/* {commentsCount.[`_${props.id}`] === 'loading' ? 'Show comments: loading' : (commentsCount.[`_${props.id}`] > 0 && <a href="/#" onClick={expand}>{postsExpandStatus.[`_${props.id}`] ? 'collpase' : `Show ${commentsCount.[`_${props.id}`]} comments`}</a>)}  */}
       </div>
       
         {postsExpandStatus.[`_${props.id}`] && 
